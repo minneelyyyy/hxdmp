@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int is_printable(char c) {
+	return (c >= 32) && (c <= 126);
+}
+
 int main(int argc, char* argv[]) {
 	FILE* stream;
 	char row[16];
@@ -36,8 +40,8 @@ int main(int argc, char* argv[]) {
 			printf(" |");
 
 			for (j = 0; j < 16; j++) {
-				if (isspace(row[j]) && !(row[j] == ' ')) putchar('.');
-				else putchar(row[j]);
+				if (is_printable(row[j])) putchar(row[j]);
+				else putchar('.');
 			}
 
 			printf("|\n");
@@ -50,25 +54,25 @@ int main(int argc, char* argv[]) {
 	}
 
 	if (i > 0) {
-		printf("%06x ", current_line);
+	printf("%06x ", current_line);
 
-		for (j = 0; j < 16; j++) {
-			if (j < i) printf("%02x", row[j]);
-			else printf("  ");
+	for (j = 0; j < 16; j++) {
+		if (j < i) printf("%02x", row[j]);
+		else printf("  ");
 
-			if (j + 1 < 16) printf(" ");
-		}
+		if (j + 1 < 16) printf(" ");
+	}
 
-		printf(" |");
+	printf(" |");
 
-		for (j = 0; j < 16; j++) {
-			if (j < i)
-				if (isspace(row[j])) putchar('.');
-				else putchar(row[j]);
-			else putchar(' ');
-		}
+	for (j = 0; j < 16; j++) {
+		if (j < i)
+			if (isspace(row[j])) putchar('.');
+			else putchar(row[j]);
+		else putchar(' ');
+	}
 
-		printf("|\n");
+	printf("|\n");
 	}
 
 	if (stream != stdin) fclose(stream);
