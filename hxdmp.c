@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int is_printable(char c) {
-	return (c >= 32) && (c <= 126);
-}
+#define is_printable(c) ((c >= 32) && (c <= 126))
 
 void print_row(char row[16], int i, int current_line) {
 	int j;
