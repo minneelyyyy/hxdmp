@@ -5,6 +5,30 @@ int is_printable(char c) {
 	return (c >= 32) && (c <= 126);
 }
 
+void print_row(char row[16], int i, int current_line) {
+	int j;
+
+	printf("%06x ", current_line * 0x10);
+
+	for (j = 0; j < 16; j++) {
+		if (j < i) printf("%02x", (unsigned char) row[j]);
+		else printf("  ");
+
+		if (j + 1 < 16) printf(" ");
+	}
+
+	printf(" |");
+
+	for (j = 0; j < 16; j++) {
+		if (j < i)
+			if (is_printable(row[j])) putchar(row[j]);
+			else putchar('.');
+		else putchar(' ');
+	}
+
+	printf("|\n");
+}
+
 int main(int argc, char* argv[]) {
 	FILE* stream;
 	char row[16];
@@ -15,6 +39,8 @@ int main(int argc, char* argv[]) {
 
 	if (argc > 1) stream = fopen(argv[1], "rb");
 	else stream = stdin;
+
+	if (stream == NULL) return 0;
 
 	i = 0;
 
@@ -28,23 +54,7 @@ int main(int argc, char* argv[]) {
 		row[i] = c;
 
 		if (i == 15) {
-			printf("%06x ", current_line * 0x10);
-
-			for (j = 0; j < 16; j++) {
-				printf("%02x", row[j]);
-
-				if (j + 1 < 16)
-					printf(" ");
-			}
-
-			printf(" |");
-
-			for (j = 0; j < 16; j++) {
-				if (is_printable(row[j])) putchar(row[j]);
-				else putchar('.');
-			}
-
-			printf("|\n");
+			print_row(row, i + 1, current_line);
 
 			i = -1;
 			current_line++;
@@ -54,25 +64,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	if (i > 0) {
-		printf("%06x ", current_line);
-
-		for (j = 0; j < 16; j++) {
-			if (j < i) printf("%02x", row[j]);
-			else printf("  ");
-
-			if (j + 1 < 16) printf(" ");
-		}
-
-		printf(" |");
-
-		for (j = 0; j < 16; j++) {
-			if (j < i)
-				if (isspace(row[j])) putchar('.');
-				else putchar(row[j]);
-			else putchar(' ');
-		}
-
-		printf("|\n");
+		print_row(row, i, current_line);
 	}
 
 	if (stream != stdin) fclose(stream);
